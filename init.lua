@@ -350,7 +350,7 @@ require('lazy').setup({
       -- Document existing key chains
       spec = {
         { '<leader>s', group = '[S]earch' },
-        { '<leader>t', group = '[T]oggle' },
+        { '<leader>t', group = '[T]est' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
     },
@@ -494,12 +494,6 @@ require('lazy').setup({
         { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
       },
     },
-  },
-  {
-    -- Roslyn LSP support for C#
-    'seblyng/roslyn.nvim',
-    ft = 'cs',
-    opts = {},
   },
   {
     -- Main LSP Configuration
@@ -1056,7 +1050,7 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
@@ -1094,9 +1088,9 @@ require('oil').setup {
   -- See :help oil-columns
   columns = {
     'icon',
-    -- "permissions",
-    -- "size",
-    -- "mtime",
+    -- 'permissions',
+    -- 'size',
+    -- 'mtime',
   },
   -- Buffer-local options to use for oil buffers
   buf_options = {
@@ -1167,7 +1161,7 @@ require('oil').setup {
   use_default_keymaps = true,
   view_options = {
     -- Show files and directories that start with "."
-    show_hidden = false,
+    show_hidden = true,
     -- This function defines what is considered a "hidden" file
     is_hidden_file = function(name, bufnr)
       local m = name:match '^%.'
