@@ -121,6 +121,12 @@ end)
 -- Enable break indent
 vim.o.breakindent = true
 
+-- Indent with spaces by default; guess-indent overrides per buffer when a file
+-- clearly uses something else. Without this, LSP formatting (e.g. Roslyn)
+-- inherits 'noexpandtab' and rewrites files with hard tabs.
+vim.o.expandtab = true
+vim.o.shiftwidth = 4
+
 -- Save undo history
 vim.o.undofile = true
 
