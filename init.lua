@@ -1067,7 +1067,11 @@ require('lazy').setup({
       'nvim-tree/nvim-web-devicons',
     },
     config = function()
-      require('nvim-tree').setup {}
+      require('nvim-tree').setup {
+        view = {
+          width = 60,
+        },
+      }
 
       vim.keymap.set('n', '<space>nt', function()
         require('nvim-tree.api').tree.toggle()
