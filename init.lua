@@ -1066,6 +1066,10 @@ require('lazy').setup({
       vim.keymap.set('n', '<space>nt', function()
         require('nvim-tree.api').tree.toggle()
       end)
+
+      vim.keymap.set('n', '<space>nf', function()
+        require('nvim-tree.api').tree.find_file { open = true, focus = true }
+      end, { desc = 'Reveal current file in tree' })
     end,
   },
 
