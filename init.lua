@@ -947,6 +947,10 @@ require('lazy').setup({
         styles = {
           comments = { italic = false }, -- Disable italics in comments
         },
+        on_highlights = function(hl, _)
+          -- JetBrains Rider / Visual Studio comment green
+          hl.Comment = { fg = '#57A64A' }
+        end,
       }
 
       -- Load the colorscheme here.
