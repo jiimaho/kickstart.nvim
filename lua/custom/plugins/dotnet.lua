@@ -68,7 +68,7 @@ return {
         type = 'file_scoped',
         enabled = true,
       },
-      picker = 'snacks',
+      picker = 'telescope',
       test_runner = {
         viewmode = 'vsplit',
         vsplit_width = 70,
@@ -109,7 +109,6 @@ return {
       { '<leader>cnB', '<cmd>Dotnet build quickfix<cr>', desc = 'build solution' },
       { '<leader>cnRr', '<cmd>Dotnet run<cr>', desc = 'run' },
       { '<leader>cnx', '<cmd>Dotnet clean<cr>', desc = 'clean solution' },
-      { '<leader>t', '', desc = '+TestRunner' },
       { '<leader>to', '<cmd>Dotnet testrunner<cr>', desc = 'Open test runner' },
       { '<leader>tR', '', desc = 'run test from buffer', ft = { 'cs', 'easy-dotnet' } },
       { '<leader>tD', '', desc = 'debug test from buffer', ft = { 'cs', 'easy-dotnet' } },
