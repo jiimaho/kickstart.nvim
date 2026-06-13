@@ -1117,6 +1117,16 @@ require('lazy').setup({
       vim.keymap.set('n', '<space>nf', function()
         require('nvim-tree.api').tree.find_file { open = true, focus = true }
       end, { desc = 'Reveal current file in tree' })
+
+      -- cd into folder under cursor in tree (fallback if <C-]> intercepted by terminal)
+      vim.keymap.set('n', '<space>nc', function()
+        require('nvim-tree.api').tree.change_root_to_node()
+      end, { desc = 'CD into folder under cursor' })
+
+      -- go up to parent dir
+      vim.keymap.set('n', '<space>nu', function()
+        require('nvim-tree.api').tree.change_root_to_parent()
+      end, { desc = 'CD up to parent dir' })
     end,
   },
 
