@@ -459,6 +459,39 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
+      -- Repo switcher: pick a repo, cd there, re-root nvim-tree
+      vim.keymap.set('n', '<leader>sR', function()
+        local repos = {
+          '~/repos/hedinbil/fleet-applications',
+          '~/repos/hedinbil/ims-applications',
+          '~/repos/hedinbil/retail-polaris',
+          '~/repos/hedinbil/integrations-applications',
+          '~/repos/hedinbil/hedin-infrastructure-state',
+          '~/repos/hedinbil/hedin-applications-state',
+          '~/repos/hedinbil/hedin-observability',
+          '~/repos/hedinbil/hedin-agents',
+          '~/repos/hedinbil/hedin-mcp-servers',
+          '~/repos/hedinbil/hedin-github-actions',
+          '~/repos/hedinbil/hedin-presentations',
+          '~/repos/hedinbil/hedin-architectural-decision-records',
+        }
+        require('telescope.pickers').new({}, {
+          prompt_title = 'Switch Repo',
+          finder = require('telescope.finders').new_table { results = repos },
+          sorter = require('telescope.config').values.generic_sorter {},
+          attach_mappings = function(prompt_bufnr)
+            require('telescope.actions').select_default:replace(function()
+              local sel = require('telescope.actions.state').get_selected_entry()
+              require('telescope.actions').close(prompt_bufnr)
+              local path = vim.fn.expand(sel[1])
+              vim.cmd('cd ' .. path)
+              require('nvim-tree.api').tree.change_root(path)
+            end)
+            return true
+          end,
+        }):find()
+      end, { desc = '[S]witch [R]epo' })
+
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
         -- You can pass additional configuration to Telescope to change the theme, layout, etc.
