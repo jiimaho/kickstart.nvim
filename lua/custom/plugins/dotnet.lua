@@ -45,25 +45,16 @@ local lsp_config = {
 
 return {
   {
-    'bosvik/netcoredbg-macOS-arm64.nvim',
-    ft = { 'cs', 'csproj' },
-    dependencies = { 'mfussenegger/nvim-dap' },
-    config = function()
-      require('netcoredbg-macOS-arm64').setup(require('dap'))
-    end,
-  },
-  {
     'GustavEikaas/easy-dotnet.nvim',
-    dependencies = { 'nvim-lua/plenary.nvim' },
+    dependencies = { 'nvim-lua/plenary.nvim', 'mfussenegger/nvim-dap' },
     ft = { 'cs', 'csproj', 'sln', 'slnx', 'props', 'csx', 'targets' },
     opts = {
       lsp = {
         enabled = true,
         config = lsp_config,
       },
-      debugger = {
-        bin_path = vim.fs.joinpath(vim.fn.stdpath('data'), 'lazy', 'netcoredbg-macOS-arm64.nvim', 'netcoredbg'),
-      },
+      -- debugger.bin_path deliberately unset: easy-dotnet downloads and manages
+      -- its own netcoredbg and registers the dap configuration itself.
       auto_bootstrap_namespace = {
         type = 'file_scoped',
         enabled = true,
