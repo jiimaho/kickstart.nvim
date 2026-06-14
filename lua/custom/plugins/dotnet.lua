@@ -49,12 +49,15 @@ return {
     dependencies = { 'nvim-lua/plenary.nvim', 'mfussenegger/nvim-dap' },
     ft = { 'cs', 'csproj', 'sln', 'slnx', 'props', 'csx', 'targets' },
     opts = {
+      -- debugger.bin_path deliberately unset: easy-dotnet downloads and manages
+      -- its own netcoredbg and registers the dap configuration itself.
       lsp = {
         enabled = true,
         config = lsp_config,
+        -- Disable built-in codelens wiring; handled once in init.lua LspAttach
+        -- to avoid duplicate refresh cycles when multiple clients attach.
+        auto_refresh_codelens = false,
       },
-      -- debugger.bin_path deliberately unset: easy-dotnet downloads and manages
-      -- its own netcoredbg and registers the dap configuration itself.
       auto_bootstrap_namespace = {
         type = 'file_scoped',
         enabled = true,

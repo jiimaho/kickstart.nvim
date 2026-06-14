@@ -692,6 +692,13 @@ require('lazy').setup({
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
             end, 'Toggle Inlay [H]ints')
           end
+
+          -- Enable codelens for Roslyn only, once per buffer. easy-dotnet's own
+          -- auto_refresh_codelens is disabled to prevent duplicate virtual lines
+          -- when multiple LSP clients attach to the same .cs buffer.
+          if client and client.name == 'easy_dotnet' then
+            vim.lsp.codelens.enable(true, { bufnr = event.buf })
+          end
         end,
       })
 
@@ -1133,6 +1140,17 @@ require('lazy').setup({
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
+
+  {
+    'kdheepak/lazygit.nvim',
+    lazy = true,
+    cmd = { 'LazyGit', 'LazyGitCurrentFile', 'LazyGitFilter', 'LazyGitFilterCurrentFile' },
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    keys = {
+      { '<leader>gl', '<cmd>LazyGit<cr>', desc = 'LazyGit' },
+      { '<leader>gL', '<cmd>LazyGitCurrentFile<cr>', desc = 'LazyGit (current file log)' },
+    },
+  },
 
   -- NOTE: Next step on your Neovim journey: Add/Configure additional plugins for Kickstart
   --
