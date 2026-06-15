@@ -470,21 +470,23 @@ require('lazy').setup({
           '~/repos/hedinbil/hedin-presentations',
           '~/repos/hedinbil/hedin-architectural-decision-records',
         }
-        require('telescope.pickers').new({}, {
-          prompt_title = 'Switch Repo',
-          finder = require('telescope.finders').new_table { results = repos },
-          sorter = require('telescope.config').values.generic_sorter {},
-          attach_mappings = function(prompt_bufnr)
-            require('telescope.actions').select_default:replace(function()
-              local sel = require('telescope.actions.state').get_selected_entry()
-              require('telescope.actions').close(prompt_bufnr)
-              local path = vim.fn.expand(sel[1])
-              vim.cmd('cd ' .. path)
-              require('nvim-tree.api').tree.change_root(path)
-            end)
-            return true
-          end,
-        }):find()
+        require('telescope.pickers')
+          .new({}, {
+            prompt_title = 'Switch Repo',
+            finder = require('telescope.finders').new_table { results = repos },
+            sorter = require('telescope.config').values.generic_sorter {},
+            attach_mappings = function(prompt_bufnr)
+              require('telescope.actions').select_default:replace(function()
+                local sel = require('telescope.actions.state').get_selected_entry()
+                require('telescope.actions').close(prompt_bufnr)
+                local path = vim.fn.expand(sel[1])
+                vim.cmd('cd ' .. path)
+                require('nvim-tree.api').tree.change_root(path)
+              end)
+              return true
+            end,
+          })
+          :find()
       end, { desc = '[S]witch [R]epo' })
 
       -- Slightly advanced example of overriding default behavior and theme
@@ -969,29 +971,11 @@ require('lazy').setup({
     },
   },
 
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
+  {
+    'jiimaho/rider-dark.nvim',
+    priority = 1000,
     config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require('tokyonight').setup {
-        styles = {
-          comments = { italic = false }, -- Disable italics in comments
-        },
-        on_highlights = function(hl, _)
-          -- JetBrains Rider / Visual Studio comment green
-          hl.Comment = { fg = '#57A64A' }
-        end,
-      }
-
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'rider-dark'
     end,
   },
 
