@@ -58,7 +58,7 @@ return {
     ft = { 'cs', 'csproj', 'sln', 'slnx', 'props', 'csx', 'targets' },
     opts = {
       debugger = {
-        bin_path = vim.fn.stdpath('data') .. '/lazy/netcoredbg-macOS-arm64.nvim/netcoredbg',
+        bin_path = vim.fn.stdpath('data') .. '/lazy/netcoredbg-macOS-arm64.nvim/netcoredbg/netcoredbg',
         console = 'integratedTerminal',
       },
       lsp = {
