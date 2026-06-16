@@ -45,12 +45,22 @@ local lsp_config = {
 
 return {
   {
+    'Cliffback/netcoredbg-macOS-arm64.nvim',
+    ft = { 'cs', 'csproj' },
+    dependencies = { 'mfussenegger/nvim-dap' },
+    config = function()
+      require('netcoredbg-macOS-arm64').setup(require('dap'))
+    end,
+  },
+  {
     'GustavEikaas/easy-dotnet.nvim',
     dependencies = { 'nvim-lua/plenary.nvim', 'mfussenegger/nvim-dap' },
     ft = { 'cs', 'csproj', 'sln', 'slnx', 'props', 'csx', 'targets' },
     opts = {
-      -- debugger.bin_path deliberately unset: easy-dotnet downloads and manages
-      -- its own netcoredbg and registers the dap configuration itself.
+      debugger = {
+        bin_path = vim.fn.stdpath('data') .. '/lazy/netcoredbg-macOS-arm64.nvim/netcoredbg',
+        console = 'integratedTerminal',
+      },
       lsp = {
         enabled = true,
         config = lsp_config,
@@ -102,6 +112,7 @@ return {
       { '<leader>cnS', '', desc = '+Solution' },
       { '<leader>cnB', '<cmd>Dotnet build quickfix<cr>', desc = 'build solution' },
       { '<leader>cnRr', '<cmd>Dotnet run<cr>', desc = 'run' },
+      { '<leader>cnRd', '<cmd>Dotnet debug profile<cr>', desc = 'debug (pick launch profile)' },
       { '<leader>cnx', '<cmd>Dotnet clean<cr>', desc = 'clean solution' },
       { '<leader>to', '<cmd>Dotnet testrunner<cr>', desc = 'Open test runner' },
       { '<leader>tR', '', desc = 'run test from buffer', ft = { 'cs', 'easy-dotnet' } },
