@@ -20,7 +20,7 @@ local lsp_config = {
     },
     ['csharp|background_analysis'] = {
       dotnet_analyzer_diagnostics_scope = 'openFiles',
-      dotnet_compiler_diagnostics_scope = 'fullSolution',
+      dotnet_compiler_diagnostics_scope = 'openFiles',
     },
     ['csharp|completion'] = {
       dotnet_provide_regex_completions = false,
@@ -70,7 +70,7 @@ return {
       },
       auto_bootstrap_namespace = {
         type = 'file_scoped',
-        enabled = true,
+        enabled = false,
       },
       picker = 'telescope',
       test_runner = {
