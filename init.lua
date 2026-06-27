@@ -120,7 +120,7 @@ end)
 
 -- Reload files changed outside Neovim (e.g. by external agents or git)
 vim.o.autoread = true
-vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'CursorHold', 'CursorHoldI' }, {
+vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter' }, {
   command = 'checktime',
 })
 
