@@ -763,6 +763,31 @@ require('lazy').setup({
         -- ts_ls = {},
         --
 
+        -- TypeScript / JavaScript / React (.ts, .tsx, .js, .jsx)
+        vtsls = {
+          settings = {
+            -- Inlay hints, mirroring the C# setup. Toggle per-buffer with
+            -- <leader>uh (already wired in LspAttach).
+            typescript = {
+              inlayHints = {
+                parameterNames = { enabled = 'literals' },
+                variableTypes = { enabled = true },
+                propertyDeclarationTypes = { enabled = true },
+                functionLikeReturnTypes = { enabled = true },
+              },
+            },
+            javascript = {
+              inlayHints = {
+                parameterNames = { enabled = 'literals' },
+                variableTypes = { enabled = true },
+              },
+            },
+          },
+        },
+
+        -- ESLint inline diagnostics + fixes
+        eslint = {},
+
         lua_ls = {
           -- cmd = { ... },
           -- filetypes = { ... },
@@ -1041,8 +1066,10 @@ require('lazy').setup({
         'bash',
         'c',
         'c_sharp',
+        'css',
         'diff',
         'html',
+        'javascript',
         'json',
         'lua',
         'luadoc',
@@ -1050,6 +1077,8 @@ require('lazy').setup({
         'markdown_inline',
         'query',
         'razor',
+        'tsx',
+        'typescript',
         'vim',
         'vimdoc',
         'xml',
