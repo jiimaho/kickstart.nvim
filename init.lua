@@ -889,6 +889,11 @@ require('lazy').setup({
     'stevearc/oil.nvim',
     ---@module 'oil'
     ---@type oil.SetupOpts
+    -- Oil does NOT map a launch key by default; set it ourselves.
+    -- `-` opens the parent dir of the current file (classic oil UX).
+    keys = {
+      { '-', '<cmd>Oil<cr>', desc = 'Open parent dir (oil)' },
+    },
     opts = {
       -- Only deviations from oil defaults; custom keymaps are merged over the
       -- default ones since use_default_keymaps is true (the default).
