@@ -1053,6 +1053,18 @@ require('lazy').setup({
       -- Jim was here :)
       require('mini.files').setup()
 
+      -- Launch mini.files at the current file's directory (falls back to cwd
+      -- for unnamed/scratch buffers). mini.nvim ships no launch key by design.
+      vim.keymap.set('n', '<leader>m', function()
+        local mf = require 'mini.files'
+        local buf_name = vim.api.nvim_buf_get_name(0)
+        if buf_name ~= '' and vim.fn.filereadable(buf_name) == 1 then
+          mf.open(buf_name)
+        else
+          mf.open()
+        end
+      end, { desc = 'Open [M]ini.files' })
+
       -- Add/delete/replace surroundings (brackets, quotes, etc.)
       --
       -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
