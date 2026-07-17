@@ -1017,6 +1017,22 @@ require('lazy').setup({
     priority = 1000,
     config = function()
       vim.cmd.colorscheme 'rider-dark'
+
+      -- Roslyn emits C#-specific semantic token types (recordStruct/recordClass)
+      -- that Neovim does not map by default, so they fall back to the empty
+      -- `@lsp` group and render with no color. Link them to `@type`. Runs on
+      -- ColorScheme because loading/reloading a colorscheme clears manual
+      -- highlight overrides.
+      vim.api.nvim_create_autocmd('ColorScheme', {
+        group = vim.api.nvim_create_augroup('csharp-lsp-hl', { clear = true }),
+        callback = function()
+          vim.api.nvim_set_hl(0, '@lsp.type.recordStruct', { link = '@type' })
+          vim.api.nvim_set_hl(0, '@lsp.type.recordClass', { link = '@type' })
+        end,
+      })
+      -- Apply now for the colorscheme already set above.
+      vim.api.nvim_set_hl(0, '@lsp.type.recordStruct', { link = '@type' })
+      vim.api.nvim_set_hl(0, '@lsp.type.recordClass', { link = '@type' })
     end,
   },
 
