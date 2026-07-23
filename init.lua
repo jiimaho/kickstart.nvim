@@ -1201,7 +1201,7 @@ require('lazy').setup({
     dependencies = { 'nvim-lua/plenary.nvim' },
     keys = {
       { '<leader>gl', '<cmd>LazyGit<cr>', desc = 'LazyGit' },
-      { '<leader>gL', '<cmd>LazyGitCurrentFile<cr>', desc = 'LazyGit (current file log)' },
+      { '<leader>gL', '<cmd>LazyGitFilterCurrentFile<cr>', desc = 'LazyGit (current file log)' },
     },
   },
 
