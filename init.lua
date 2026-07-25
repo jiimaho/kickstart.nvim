@@ -1170,9 +1170,10 @@ require('lazy').setup({
     version = '*',
     lazy = false,
     dependencies = {
-      'nvim-tree/nvim-web-devicons',
+      { 'nvim-mini/mini.icons', opts = {} },
     },
     config = function()
+      require('mini.icons').mock_nvim_web_devicons()
       require('nvim-tree').setup {
         view = {
           width = 60,
