@@ -1178,6 +1178,12 @@ require('lazy').setup({
         view = {
           width = 60,
         },
+        renderer = {
+          icons = {
+            -- git glyphs pinned to the right edge so names stay left-aligned
+            git_placement = 'right_align',
+          },
+        },
       }
 
       vim.keymap.set('n', '<space>nt', function()
