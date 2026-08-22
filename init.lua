@@ -634,6 +634,7 @@ require('lazy').setup({
           -- Fuzzy find all the symbols in your current document.
           --  Symbols are things like variables, functions, types, etc.
           map('gO', require('telescope.builtin').lsp_document_symbols, 'Open Document Symbols')
+          map('<leader>o', require('telescope.builtin').lsp_document_symbols, 'Open Document Symbols')
 
           -- Fuzzy find all the symbols in your current workspace.
           --  Similar to document symbols, except searches over your entire project.
@@ -832,6 +833,7 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
         'jsonnetfmt', -- Used to format Jsonnet/libsonnet code
+        'prettierd', -- Used to format JS/TS/CSS/JSON — respects each project's .prettierrc
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -885,11 +887,19 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         jsonnet = { 'jsonnetfmt' },
-        -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
-        --
-        -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        -- prettierd reads the project's own .prettierrc (tabWidth, printWidth, etc.),
+        -- unlike the LSP-fallback formatter these used to hit — that one used tsserver's
+        -- own defaults and doesn't know about .prettierrc, which is how a manual
+        -- merge-conflict edit silently drifted from 2-space to 4-space on save.
+        javascript = { 'prettierd' },
+        typescript = { 'prettierd' },
+        javascriptreact = { 'prettierd' },
+        typescriptreact = { 'prettierd' },
+        css = { 'prettierd' },
+        scss = { 'prettierd' },
+        json = { 'prettierd' },
+        jsonc = { 'prettierd' },
+        markdown = { 'prettierd' },
       },
     },
   },
@@ -1175,6 +1185,10 @@ require('lazy').setup({
     config = function()
       require('mini.icons').mock_nvim_web_devicons()
       require('nvim-tree').setup {
+        filters = {
+          -- show gitignored files (.env.local etc); toggle with I in the tree
+          git_ignored = false,
+        },
         view = {
           width = 60,
         },
