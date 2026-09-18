@@ -19,8 +19,11 @@ local lsp_config = {
       dotnet_enable_tests_code_lens = true,
     },
     ['csharp|background_analysis'] = {
+      -- Analyzers (style/quality rules) stay on open files: solution-wide is
+      -- the expensive one. Compiler diagnostics go solution-wide so breakage
+      -- in files that happen not to be open still shows up in <leader>ce.
       dotnet_analyzer_diagnostics_scope = 'openFiles',
-      dotnet_compiler_diagnostics_scope = 'openFiles',
+      dotnet_compiler_diagnostics_scope = 'fullSolution',
     },
     ['csharp|completion'] = {
       dotnet_provide_regex_completions = false,
