@@ -19,11 +19,15 @@ local lsp_config = {
       dotnet_enable_tests_code_lens = true,
     },
     ['csharp|background_analysis'] = {
-      -- Analyzers (style/quality rules) stay on open files: solution-wide is
-      -- the expensive one. Compiler diagnostics go solution-wide so breakage
-      -- in files that happen not to be open still shows up in <leader>ce.
+      -- Keep both scopes on open files. fullSolution makes Roslyn publish
+      -- diagnostics for every file in the solution; Neovim calls bufadd() per
+      -- URI, and bufadd() linear-scans the buffer list with a case-insensitive
+      -- path compare, so cost is quadratic in solution size. Measured on this
+      -- setup: nvim pinned at 100% CPU with 62% of samples in f_bufadd, Roslyn
+      -- RSS climbing past 5GB. Use <leader>cnB (build to quickfix) for
+      -- solution-wide errors instead.
       dotnet_analyzer_diagnostics_scope = 'openFiles',
-      dotnet_compiler_diagnostics_scope = 'fullSolution',
+      dotnet_compiler_diagnostics_scope = 'openFiles',
     },
     ['csharp|completion'] = {
       dotnet_provide_regex_completions = false,
