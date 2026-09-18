@@ -118,10 +118,22 @@ vim.schedule(function()
   vim.o.clipboard = 'unnamedplus'
 end)
 
--- Reload files changed outside Neovim (e.g. by external agents or git)
+-- Reload files changed outside Neovim (e.g. by external agents or git).
+-- 'CursorHold' is the one that matters when an agent rewrites the file you are
+-- already looking at: no window focus change and no buffer switch happen, so
+-- 'FocusGained' and 'BufEnter' never fire and the screen keeps showing stale
+-- text. 'TermLeave'/'TermClose' cover agents run in a Neovim terminal split.
+-- Buffers with unsaved changes are never clobbered; 'autoread' skips those and
+-- Neovim prompts instead.
 vim.o.autoread = true
-vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter' }, {
-  command = 'checktime',
+vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'CursorHold', 'TermLeave', 'TermClose' }, {
+  group = vim.api.nvim_create_augroup('checktime-external-changes', { clear = true }),
+  callback = function()
+    -- :checktime is not allowed while the command-line window is open.
+    if vim.fn.getcmdwintype() == '' then
+      vim.cmd.checktime()
+    end
+  end,
 })
 
 -- Enable break indent
