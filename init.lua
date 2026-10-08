@@ -1093,6 +1093,19 @@ require('lazy').setup({
       -- Apply now for the colorscheme already set above.
       vim.api.nvim_set_hl(0, '@lsp.type.recordStruct', { link = '@type' })
       vim.api.nvim_set_hl(0, '@lsp.type.recordClass', { link = '@type' })
+
+      -- rider-dark's CursorLine (#202424) is darker than Normal (#262626), so
+      -- the row nvim-tree lands on is invisible in an unfocused window. Give
+      -- the tree its own faint blue row instead of inheriting that.
+      local function nvim_tree_hl()
+        vim.api.nvim_set_hl(0, 'NvimTreeCursorLine', { bg = '#2a3a4e' })
+        vim.api.nvim_set_hl(0, 'NvimTreeCursorLineNr', { bg = '#2a3a4e', fg = '#a0a0a0' })
+      end
+      vim.api.nvim_create_autocmd('ColorScheme', {
+        group = vim.api.nvim_create_augroup('nvim-tree-hl', { clear = true }),
+        callback = nvim_tree_hl,
+      })
+      nvim_tree_hl()
     end,
   },
 
