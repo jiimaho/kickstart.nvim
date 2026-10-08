@@ -1210,6 +1210,10 @@ require('lazy').setup({
             git_placement = 'right_align',
           },
         },
+        -- follow the buffer you switch to, uncollapsing folders on the way
+        update_focused_file = {
+          enable = true,
+        },
       }
 
       vim.keymap.set('n', '<space>nt', function()
