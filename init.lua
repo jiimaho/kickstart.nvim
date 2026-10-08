@@ -205,6 +205,22 @@ vim.keymap.set('n', '<leader>r', function()
   vim.lsp.buf.format { async = false }
 end, { desc = 'Format buffer' })
 
+-- Scroll <C-d>/<C-u> a bit less far than the default half-window jump.
+local scroll_fraction = 0.7
+local function scroll_by(key)
+  return function()
+    -- A typed count (e.g. 5<C-d>) still applies to the keys we return, so pass
+    -- it straight through instead of stacking our own count on top of it.
+    if vim.v.count > 0 then
+      return key
+    end
+    local half = vim.api.nvim_win_get_height(0) / 2
+    return math.max(1, math.floor(half * scroll_fraction)) .. key
+  end
+end
+vim.keymap.set({ 'n', 'x' }, '<C-d>', scroll_by '<C-d>', { expr = true, desc = 'Scroll down (70% of default)' })
+vim.keymap.set({ 'n', 'x' }, '<C-u>', scroll_by '<C-u>', { expr = true, desc = 'Scroll up (70% of default)' })
+
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
