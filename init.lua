@@ -643,14 +643,28 @@ require('lazy').setup({
           --  For example, in C this would take you to the header.
           map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
+          -- Telescope truncates symbol names to 25 columns by default, which cuts
+          -- most C# method names in half. Give the symbol column as much of the
+          -- window as the layout can spare instead.
+          local function symbol_picker(builtin_name)
+            return function()
+              local wide = vim.o.columns >= 120
+              require('telescope.builtin')[builtin_name] {
+                symbol_width = math.max(40, math.floor(vim.o.columns * (wide and 0.45 or 0.7))),
+                layout_strategy = wide and 'horizontal' or 'vertical',
+                layout_config = wide and { width = 0.9, preview_width = 0.4 } or { width = 0.95 },
+              }
+            end
+          end
+
           -- Fuzzy find all the symbols in your current document.
           --  Symbols are things like variables, functions, types, etc.
-          map('gO', require('telescope.builtin').lsp_document_symbols, 'Open Document Symbols')
-          map('<leader>o', require('telescope.builtin').lsp_document_symbols, 'Open Document Symbols')
+          map('gO', symbol_picker 'lsp_document_symbols', 'Open Document Symbols')
+          map('<leader>o', symbol_picker 'lsp_document_symbols', 'Open Document Symbols')
 
           -- Fuzzy find all the symbols in your current workspace.
           --  Similar to document symbols, except searches over your entire project.
-          map('gW', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Open Workspace Symbols')
+          map('gW', symbol_picker 'lsp_dynamic_workspace_symbols', 'Open Workspace Symbols')
 
           -- Jump to the type of the word under your cursor.
           --  Useful when you're not sure what type a variable is and you want to see
