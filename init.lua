@@ -448,15 +448,50 @@ require('lazy').setup({
       -- Telescope picker. This is really useful to discover what Telescope can
       -- do as well as how to actually do it!
 
+      -- Superpowers writes its planning artifacts into these folders. They are
+      -- markdown prose, and in a repo that uses them they bury real code hits
+      -- under hundreds of plan/spec matches. Excluded from telescope only, so
+      -- command-line rg still searches them.
+      --
+      -- Leading **/ matters: an rg glob containing a slash is anchored to the
+      -- search root, and in a monorepo these folders live under
+      -- workloads/<project>/, not at the top.
+      local noise_globs = {
+        '!**/docs/superpowers/**',
+        '!**/plans/**',
+        '!**/specs/**',
+      }
+
+      -- Read before setup() so this is the stock argument list, not a
+      -- previously-extended one.
+      local vimgrep_arguments = vim.deepcopy(require('telescope.config').values.vimgrep_arguments)
+      for _, glob in ipairs(noise_globs) do
+        table.insert(vimgrep_arguments, '--glob')
+        table.insert(vimgrep_arguments, glob)
+      end
+
       -- [[ Configure Telescope ]]
       -- See `:help telescope` and `:help telescope.setup()`
       require('telescope').setup {
         defaults = {
           path_display = { 'filename_first' },
+          -- Applies to live_grep (<leader>sg) and grep_string (<leader>sw).
+          vimgrep_arguments = vimgrep_arguments,
         },
         pickers = {
           find_files = {
             hidden = true,
+            -- A function, not a table: telescope appends --hidden to whatever
+            -- it is handed, so a shared table would grow by one flag on every
+            -- invocation.
+            find_command = function()
+              local cmd = { 'rg', '--files', '--color', 'never' }
+              for _, glob in ipairs(noise_globs) do
+                table.insert(cmd, '--glob')
+                table.insert(cmd, glob)
+              end
+              return cmd
+            end,
           },
         },
         extensions = {
