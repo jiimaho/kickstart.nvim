@@ -1276,6 +1276,55 @@ require('lazy').setup({
       vim.keymap.set('n', '<space>nu', function()
         require('nvim-tree.api').tree.change_root_to_parent()
       end, { desc = 'CD up to parent dir' })
+
+      -- Fuzzy-pick a directory and re-root the tree there, instead of
+      -- expanding down to it one folder at a time. .NET repos nest deep
+      -- enough that walking the tree costs a dozen keystrokes.
+      vim.keymap.set('n', '<space>nd', function()
+        local pickers = require 'telescope.pickers'
+        local finders = require 'telescope.finders'
+        local conf = require('telescope.config').values
+        local actions = require 'telescope.actions'
+        local action_state = require 'telescope.actions.state'
+
+        -- Both branches honour .gitignore, which keeps build output and
+        -- .claude worktrees out of the list. fd is one process; the rg
+        -- fallback rebuilds every ancestor path from the file list.
+        local list_dirs = [[
+          if command -v fd >/dev/null 2>&1; then
+            printf '.\n'; fd --type d --hidden --exclude .git
+          else
+            { printf '.\n'; rg --files --hidden --glob '!.git' \
+              | awk -F/ '{p=""; for (i=1; i<NF; i++) { p = p $i; print p; p = p "/" }}'; } | sort -u
+          fi
+        ]]
+
+        pickers
+          .new({}, {
+            prompt_title = 'Tree Root',
+            finder = finders.new_oneshot_job({ 'sh', '-c', list_dirs }, { cwd = vim.uv.cwd() }),
+            sorter = conf.file_sorter {},
+            attach_mappings = function(prompt_bufnr)
+              actions.select_default:replace(function()
+                local entry = action_state.get_selected_entry()
+                actions.close(prompt_bufnr)
+                if not entry then
+                  return
+                end
+                -- change_root is a no-op until the explorer exists, so the
+                -- tree has to be opened first. Trailing slash stripped because
+                -- nvim-tree stores root paths without one.
+                local api = require 'nvim-tree.api'
+                local dir = vim.fn.fnamemodify(entry.value or entry[1], ':p'):gsub('/$', '')
+                api.tree.open()
+                api.tree.change_root(dir)
+                api.tree.focus()
+              end)
+              return true
+            end,
+          })
+          :find()
+      end, { desc = 'Re-root nvim-tree at a directory' })
     end,
   },
 
